@@ -160,10 +160,11 @@
 #salesman .savedPc {
     width: 100%;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     position: fixed;
     top: 0;
     display: none;
+    overflow-y: scroll;
 }
 #salesman .savedPc .close {
     position: absolute;
@@ -200,4 +201,35 @@
     margin: 0 15px;
     cursor: pointer;
     min-width: 150px;
+}
+#salesman .savedPc .components {
+    margin: 70px 0 0 0;
+    display: none;
+}
+#salesman .savedPc .components .item {
+    background: #fff;
+}
+#salesman .savedPc .components .head span {
+    color: #fff;
+}
+#salesman .savedPc .nameWattPrice {
+    color: #fff;
+    margin: 80px 0 0 0;
+    text-align: center;
+    display: none;
+}
+#salesman .savedPc .nameWattPrice > span {
+    margin: 0 40px;
+    font-size: 1.5em;
+}
+#salesman .savedPc .nameWattPrice .watt {
+    font-weight: bold;
+    color: red;
+}
+#salesman .savedPc .nameWattPrice .customer {
+    font-weight: bold;
+}
+#salesman .savedPc .nameWattPrice .price {
+    font-weight: bold;
+    color: rgb(0, 199, 0);
 }

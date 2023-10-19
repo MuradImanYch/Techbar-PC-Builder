@@ -24,6 +24,7 @@ const Salesman = () => {
 
     const[saveQuant, setSaveQuant] = useState();
     const[saveNameList, setSaveNameList] = useState();
+    const[customerComponents, setCustomerComponents] = useState();
 
     useEffect(() => {
         axios.get('/save/get')
@@ -81,7 +82,7 @@ const Salesman = () => {
     const save = (e) => {
         e.preventDefault();
 
-        saveName.length > 0 && localStorage.getItem('cpu') !== null && localStorage.getItem('mb') !== null && localStorage.getItem('ram') !== null && localStorage.getItem('videocard') !== null && localStorage.getItem('storage') !== null && localStorage.getItem('psu') !== null && localStorage.getItem('case') !== null && localStorage.getItem('cooler') !== null && localStorage.getItem('caseFan') !== null && localStorage.getItem('display') !== null ?
+        saveName.length > 0 && localStorage.getItem('cpu') !== null && localStorage.getItem('mb') !== null && localStorage.getItem('ram') !== null && localStorage.getItem('videocard') !== null && localStorage.getItem('storage') !== null && localStorage.getItem('psu') !== null && localStorage.getItem('case') !== null && localStorage.getItem('cooler') !== null ?
         axios.post('/save', {
             cpu: JSON.parse(localStorage.getItem('cpu')) && JSON.parse(localStorage.getItem('cpu')),
             mb: JSON.parse(localStorage.getItem('mb')) && JSON.parse(localStorage.getItem('mb')),
@@ -122,7 +123,7 @@ const Salesman = () => {
         .then(response =>{
             setSaveQuant(response.data.length);
             setSaveNameList(response.data && response.data.map(e => {
-                return <button key={'key' + e.id} id={'id' + e.id}>{JSON.parse(e.customer)}</button>
+                return <button onClick={openComponents} key={'key' + e.id} id={'id' + e.id}>{JSON.parse(e.customer)}</button>
             }));
         })
         .catch(err => {
@@ -134,6 +135,28 @@ const Salesman = () => {
 
         $('#salesman .savedPc').fadeOut();
         $('body').css({overflow: 'auto'});
+    }
+
+    const openComponents = (e) => {
+        e.preventDefault();
+
+        $('#salesman > div.savedPc > div > div.nameWrap > button').css({boxShadow: '0px 0px 0px #fff'});
+        $(e.target).css({boxShadow: '0px 0px 15px green'});
+
+        $('#salesman .savedPc .components').hide();
+        $('#salesman .savedPc .components').slideDown('slow');
+        $('#salesman .savedPc .nameWattPrice').hide();
+        $('#salesman .savedPc .nameWattPrice').slideDown('slow');
+
+        axios.post('/save/get-by-name', {
+            id: $(e.target).attr('id').match(/\d+/)
+        })
+        .then(response => {
+            setCustomerComponents(response.data);
+        })
+        .catch(err => {
+            if(err) throw err;
+        });
     }
 
     return (
@@ -256,7 +279,98 @@ const Salesman = () => {
                     <div className="nameWrap">
                         {saveNameList}
                     </div>
-                    <div className="components">components</div>
+                    <div className="nameWattPrice">
+                        <span>Müştəri: <span className='customer'>{customerComponents && JSON.parse(customerComponents[0].customer)}</span></span>
+                        <span>Wattage: <span className='watt'>{customerComponents && JSON.parse(customerComponents[0].watt)}W</span></span>
+                        <span>Qiymət: <span className='price'>{customerComponents && JSON.parse(customerComponents[0].price)}₼</span></span>
+                    </div>
+                    <div className="components">
+                        <div className="head">
+                            <span>Komponent</span>
+                            <span>Məhsulun adı</span>
+                            <span>Qiymət</span>
+                        </div>
+                        <div className="item">
+                            <span>Prosessor</span>
+                            <div className='imgName'>
+                                <img src={customerComponents && JSON.parse(customerComponents[0].cpu).img} alt='ico' />
+                                <span>{customerComponents && JSON.parse(customerComponents[0].cpu).name}</span>
+                            </div>
+                            <span className='price'>{customerComponents && JSON.parse(customerComponents[0].cpu).price} <span>₼</span></span>
+                        </div>
+                        <div className="item">
+                            <span>Ana plata</span>
+                            <div className='imgName'>
+                                <img src={customerComponents && JSON.parse(customerComponents[0].mb).img} alt='ico' />
+                                <span>{customerComponents && JSON.parse(customerComponents[0].mb).name}</span>
+                            </div>
+                            <span className='price'>{customerComponents && JSON.parse(customerComponents[0].mb).price} <span>₼</span></span>
+                        </div>
+                        <div className="item">
+                            <span>RAM</span>
+                            <div className='imgName'>
+                                <img src={customerComponents && JSON.parse(customerComponents[0].ram).img} alt='ico' />
+                                <span>{customerComponents && JSON.parse(customerComponents[0].ram).name}</span>
+                            </div>
+                            <span className='price'>{customerComponents && JSON.parse(customerComponents[0].ram).price} <span>₼</span></span>
+                        </div>
+                        <div className="item">
+                            <span>Videokart</span>
+                            <div className='imgName'>
+                                <img src={customerComponents && JSON.parse(customerComponents[0].videocard).img} alt='ico' />
+                                <span>{customerComponents && JSON.parse(customerComponents[0].videocard).name}</span>
+                            </div>
+                            <span className='price'>{customerComponents && JSON.parse(customerComponents[0].videocard).price} <span>₼</span></span>
+                        </div>
+                        <div className="item">
+                            <span>Yaddaş</span>
+                            <div className='imgName'>
+                                <img src={customerComponents && JSON.parse(customerComponents[0].storage).img} alt='ico' />
+                                <span>{customerComponents && JSON.parse(customerComponents[0].storage).name}</span>
+                            </div>
+                            <span className='price'>{customerComponents && JSON.parse(customerComponents[0].storage).price} <span>₼</span></span>
+                        </div>
+                        <div className="item">
+                            <span>Qida bloku</span>
+                            <div className='imgName'>
+                                <img src={customerComponents && JSON.parse(customerComponents[0].psu).img} alt='ico' />
+                                <span>{customerComponents && JSON.parse(customerComponents[0].psu).name}</span>
+                            </div>
+                            <span className='price'>{customerComponents && JSON.parse(customerComponents[0].psu).price} <span>₼</span></span>
+                        </div>
+                        <div className="item">
+                            <span>Keys</span>
+                            <div className='imgName'>
+                                <img src={customerComponents && JSON.parse(customerComponents[0].cases).img} alt='ico' />
+                                <span>{customerComponents && JSON.parse(customerComponents[0].cases).name}</span>
+                            </div>
+                            <span className='price'>{customerComponents && JSON.parse(customerComponents[0].cases).price} <span>₼</span></span>
+                        </div>
+                        <div className="item">
+                            <span>Prosessor soyuducu</span>
+                            <div className='imgName'>
+                                <img src={customerComponents && JSON.parse(customerComponents[0].cooler).img} alt='ico' />
+                                <span>{customerComponents && JSON.parse(customerComponents[0].cooler).name}</span>
+                            </div>
+                            <span className='price'>{customerComponents && JSON.parse(customerComponents[0].cooler).price} <span>₼</span></span>
+                        </div>
+                        <div className="item">
+                            <span>Keys fan</span>
+                            {customerComponents && JSON.parse(customerComponents[0].caseFan !== 'null') ? <><div className='imgName'>
+                                <img src={customerComponents && JSON.parse(customerComponents[0].caseFan).img} alt='ico' />
+                                <span>{customerComponents && JSON.parse(customerComponents[0].caseFan).name}</span>
+                            </div>
+                            <span className='price'>{customerComponents && JSON.parse(customerComponents[0].caseFan).price} <span>₼</span></span></> : '-'}
+                        </div>
+                        <div className="item">
+                            <span>Monitor</span>
+                            {customerComponents && JSON.parse(customerComponents[0].monitor !== 'null') ? <><div className='imgName'>
+                                <img src={customerComponents && JSON.parse(customerComponents[0].monitor).img} alt='ico' />
+                                <span>{customerComponents && JSON.parse(customerComponents[0].monitor).name}</span>
+                            </div>
+                            <span className='price'>{customerComponents && JSON.parse(customerComponents[0].monitor).price} <span>₼</span></span></> : '-'}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

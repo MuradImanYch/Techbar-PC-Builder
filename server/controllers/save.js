@@ -10,3 +10,8 @@ module.exports.get = (req, res) => {
         res.send(result);
     }));
 }
+module.exports.getByName = (req, res) => {
+    db.query(`SELECT * FROM readymade WHERE id="${req.body.id[0]}"`, ((err, result) => {
+        res.send(result);
+    }));
+}
